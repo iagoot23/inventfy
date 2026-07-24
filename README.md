@@ -16,7 +16,7 @@ Hoje o controle é feito por planilha de papel (metalmecânica) ou não existe (
 4. Padronizar o uso do sistema entre todos os envolvidos.
 5. Auxiliar pedidos de compra.
 
-Mais detalhes em [requisitos.md](./requisitos.md).
+Mais detalhes em [REQUIREMENTS.md](./REQUIREMENTS.md).
 
 ## Status
 
