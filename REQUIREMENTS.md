@@ -214,21 +214,19 @@ Emprestada para supervisor: enviado notificação diferente lembrando de devolve
 
 ## 7. Modelo de Dados (rascunho)
 
-**Convenções de nomenclatura:** tabelas em snake_case, plural (ex.: `usuarios`, `itens`); colunas em snake_case, singular. Chave primária `id` (bigserial). Toda tabela possui `created_at`; tabelas com dados editáveis também possuem `updated_at`. `logs_auditoria` é somente-inserção (append-only), por isso não possui `updated_at`.
-
 ```mermaid
 erDiagram
-    eixos ||--o{ itens : "possui estoque"
-    eixos ||--o{ cursos : "oferece"
-    eixos ||--o{ usuarios : "atua em / matriculado em"
-    cursos ||--o{ usuarios : "matricula (aluno)"
-    usuarios ||--o{ movimentacoes : "solicita"
-    usuarios ||--o{ movimentacoes : "aprova"
-    itens ||--o{ movimentacoes : "movimenta"
-    usuarios ||--o{ pedidos_compra : "solicita (instrutor)"
-    itens ||--o{ pedidos_compra : "referencia"
-    usuarios ||--o| configs_relatorio_semanal : "configura (supervisor)"
-    usuarios ||--o{ logs_auditoria : "gera"
+    usuarios ||--o{ movimentacoes : solicita
+    usuarios ||--o{ movimentacoes : aprova
+    itens ||--o{ movimentacoes : movimenta
+    usuarios ||--o{ pedidos_compra : solicita
+    itens ||--o{ pedidos_compra : referencia
+    usuarios ||--o{ logs_auditoria : gera
+    usuarios ||--o| configs_relatorio_semanal : configura
+    eixos ||--o{ itens : possui
+    eixos ||--o{ usuarios : atua_em
+    eixos ||--o{ cursos : oferece
+    cursos ||--o{ usuarios : matricula
 ```
 
 ### eixos
