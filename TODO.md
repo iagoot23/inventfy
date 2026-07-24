@@ -26,7 +26,9 @@ This file is maintained by Claude Code across sessions; it is not a user-facing 
 - [x] Create `CLAUDE.md`
 - [x] Create `TODO.md` and point `CLAUDE.md` to it
 - [x] Translate `TODO.md` to English; establish English-only documentation/naming policy (app UI stays in Portuguese)
-- [ ] Decide whether to translate `REQUIREMENTS.md`, `README.md`, and `docs/database-schema.md` to English (pending user decision)
+- [x] Decide doc translation scope: `REQUIREMENTS.md` and `README.md` stay in Portuguese (third-party facing); `docs/database-schema.md`, `CLAUDE.md`, `TODO.md` are English-only (internal)
+- [x] Translate `docs/database-schema.md` to English and rename all tables/columns to English (users, items, workshops, stock_movements, purchase_orders, weekly_report_settings, audit_logs, condition values, etc.)
+- [x] Update the conceptual ER diagram in `REQUIREMENTS.md` §7 to match the renamed English entities
 - [ ] Define and fill in a new "References and Attachments" section (if needed)
 
 ## 1. Setup

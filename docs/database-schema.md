@@ -1,125 +1,144 @@
-# Esquema de Banco de Dados — Inventfy
+# Database Schema — Inventfy
 
-Detalha o [Modelo de Dados](../REQUIREMENTS.md#7-modelo-de-dados-rascunho) descrito no documento de requisitos. Este arquivo é o ponto de referência técnico para colunas, tipos, chaves e índices; deve ser atualizado conforme migrations/schema real do banco forem criadas no código.
+Details the [Data Model](../REQUIREMENTS.md#7-modelo-de-dados-rascunho) described in the requirements document. This file is the technical reference for columns, types, keys, and indexes; it must be kept in sync with the actual migrations/ORM schema once those exist in code.
 
-**Convenções de nomenclatura:** tabelas em snake_case, plural (ex.: `usuarios`, `itens`); colunas em snake_case, singular. Chave primária `id` (bigserial). Toda tabela possui `created_at`; tabelas com dados editáveis também possuem `updated_at`. `logs_auditoria` é somente-inserção (append-only), por isso não possui `updated_at`.
+**Naming conventions:** tables in snake_case, plural (e.g. `users`, `items`); columns in snake_case, singular. Primary key `id` (bigserial). Every table has `created_at`; tables with editable data also have `updated_at`. `audit_logs` is insert-only (append-only), so it has no `updated_at`.
+
+**Terminology mapping** (REQUIREMENTS.md is in Portuguese; this schema is in English):
+
+| REQUIREMENTS.md (PT) | Schema (EN) |
+| --- | --- |
+| aluno | student |
+| docente / instrutor | teacher / instructor |
+| supervisor | supervisor |
+| eixo / oficina | workshop |
+| curso | course |
+| item | item |
+| insumo | supply |
+| componente reutilizável | reusable component |
+| ferramenta/equipamento | tool/equipment |
+| condição (novo / em manutenção / danificado) | condition (new / under_maintenance / damaged) |
+| movimentação (entrada / saída) | stock movement (inbound / outbound) |
+| pedido de compra | purchase order |
+| relatório semanal | weekly report |
+| log de auditoria | audit log |
 
 ```mermaid
 erDiagram
-    usuarios ||--o{ movimentacoes : solicita
-    usuarios ||--o{ movimentacoes : aprova
-    itens ||--o{ movimentacoes : movimenta
-    usuarios ||--o{ pedidos_compra : solicita
-    itens ||--o{ pedidos_compra : referencia
-    usuarios ||--o{ logs_auditoria : gera
-    usuarios ||--o| configs_relatorio_semanal : configura
-    eixos ||--o{ itens : possui
-    eixos ||--o{ usuarios : atua_em
-    eixos ||--o{ cursos : oferece
-    cursos ||--o{ usuarios : matricula
+    users ||--o{ stock_movements : requests
+    users ||--o{ stock_movements : approves
+    items ||--o{ stock_movements : moves
+    users ||--o{ purchase_orders : requests
+    items ||--o{ purchase_orders : references
+    users ||--o{ audit_logs : generates
+    users ||--o| weekly_report_settings : configures
+    workshops ||--o{ items : holds
+    workshops ||--o{ users : hosts
+    workshops ||--o{ courses : offers
+    courses ||--o{ users : enrolls
 ```
 
-### eixos
-| Campo | Tipo | Observação |
+### workshops
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| nome | string | único; Eletroeletrônica, Metalmecânica, Vestuário* e Tecnologia da Informação* (*futuro) |
+| name | string | unique; Electronics, Machining, Fashion* and Information Technology* (*future) |
 | created_at | datetime | |
 | updated_at | datetime | |
 
-### cursos
-| Campo | Tipo | Observação |
+### courses
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| nome | string | |
-| eixo_id | FK → eixos.id | indexado |
+| name | string | |
+| workshop_id | FK → workshops.id | indexed |
 | created_at | datetime | |
 | updated_at | datetime | |
 
-### usuarios
-| Campo | Tipo | Observação |
+### users
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| nome | string | |
-| matricula | string | único |
-| email | string | único; domínio validado conforme RF06 |
-| senha_hash | string | ver requisitos de senha (Seção 5) |
-| foto | string (opcional) | editável pelo próprio usuário (RF06) |
-| tipo | enum | aluno \| instrutor \| supervisor |
-| eixo_id | FK → eixos.id | indexado; eixo de atuação/matrícula; para supervisor, define o eixo sob sua aprovação (RN6) |
-| curso_id | FK → cursos.id (nullable) | indexado; exclusivo para aluno |
+| name | string | |
+| registration_number | string | unique |
+| email | string | unique; domain validated per RF06 |
+| password_hash | string | see password requirements (Section 5) |
+| photo | string (optional) | editable by the user themselves (RF06) |
+| role | enum | student \| instructor \| supervisor |
+| workshop_id | FK → workshops.id | indexed; workshop the user acts in/is enrolled in; for supervisor, defines the workshop under their approval (RN6) |
+| course_id | FK → courses.id (nullable) | indexed; students only |
 | created_at | datetime | |
 | updated_at | datetime | |
 
-### itens
-| Campo | Tipo | Observação |
+### items
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| nome | string | |
-| codigo_proteus | string | |
-| numero_patrimonio | string (nullable) | se aplicável |
-| categoria | string | |
-| medida_modelo | string | |
-| descricao | string | |
-| quantidade_atual | int | |
-| quantidade_minima | int | limiar, editável somente por supervisor |
-| localizacao_fisica | string | |
-| foto | string | |
-| tipo | enum | insumo \| componente_reutilizavel \| ferramenta_equipamento |
-| condicao | enum (nullable) | novo \| em_manutencao \| danificado — aplicável somente a ferramenta_equipamento e componente_reutilizavel (RF01) |
-| eixo_id | FK → eixos.id | indexado; cada oficina tem estoque próprio (RN5) |
+| name | string | |
+| proteus_code | string | |
+| asset_number | string (nullable) | if applicable |
+| category | string | |
+| size_model | string | |
+| description | string | |
+| current_quantity | int | |
+| minimum_quantity | int | threshold, editable only by supervisor |
+| physical_location | string | |
+| photo | string | |
+| type | enum | supply \| reusable_component \| tool_equipment |
+| condition | enum (nullable) | new \| under_maintenance \| damaged — applies only to tool_equipment and reusable_component (RF01) |
+| workshop_id | FK → workshops.id | indexed; each workshop has its own stock (RN5) |
 | created_at | datetime | |
 | updated_at | datetime | |
 
-### movimentacoes
-| Campo | Tipo | Observação |
+### stock_movements
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| item_id | FK → itens.id | indexado |
-| tipo | enum | entrada \| saida |
-| quantidade | int | |
-| usuario_solicitante_id | FK → usuarios.id | indexado |
-| usuario_aprovador_id | FK → usuarios.id (nullable) | indexado; nulo quando não requer aprovação (RN6) |
-| finalidade | string | |
-| estado | enum | pendente \| aprovada \| negada \| disponivel \| atrasada (RF02) |
-| prazo_devolucao | datetime (nullable) | calculado conforme turno/perfil (RN1, RN2) |
-| data_devolucao_efetiva | datetime (nullable) | |
-| created_at | datetime | momento da solicitação |
-| updated_at | datetime | última mudança de estado |
+| item_id | FK → items.id | indexed |
+| type | enum | inbound \| outbound |
+| quantity | int | |
+| requester_id | FK → users.id | indexed |
+| approver_id | FK → users.id (nullable) | indexed; null when no approval is required (RN6) |
+| purpose | string | |
+| status | enum | pending \| approved \| denied \| available \| overdue (RF02) |
+| return_deadline | datetime (nullable) | calculated based on shift/profile (RN1, RN2) |
+| actual_return_date | datetime (nullable) | |
+| created_at | datetime | moment of the request |
+| updated_at | datetime | last status change |
 
-### pedidos_compra
-| Campo | Tipo | Observação |
+### purchase_orders
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| item_id | FK → itens.id (nullable) | indexado; nulo se item ainda não cadastrado |
-| quantidade | int | |
-| justificativa | string | |
-| usuario_solicitante_id | FK → usuarios.id | indexado; somente instrutor (RF07) |
-| created_at | datetime | momento da solicitação |
+| item_id | FK → items.id (nullable) | indexed; null if the item isn't registered yet |
+| quantity | int | |
+| justification | string | |
+| requester_id | FK → users.id | indexed; instructors only (RF07) |
+| created_at | datetime | moment of the request |
 | updated_at | datetime | |
 
-### configs_relatorio_semanal
-| Campo | Tipo | Observação |
+### weekly_report_settings
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| usuario_id | FK → usuarios.id | único, indexado; somente supervisor |
-| dia_semana | enum | padrão: sexta-feira |
-| horario | time | padrão: 14h |
-| incluir_movimentacoes | bool | |
-| incluir_cursos_oficina | bool | |
-| incluir_instrutores_oficina | bool | |
-| incluir_ferramentas_reparo | bool | |
-| incluir_itens_limiar_minimo | bool | |
-| incluir_inadimplentes | bool | |
+| user_id | FK → users.id | unique, indexed; supervisors only |
+| weekday | enum | default: Friday |
+| time | time | default: 2:00 PM |
+| include_stock_movements | bool | |
+| include_workshop_courses | bool | |
+| include_workshop_instructors | bool | |
+| include_tools_needing_repair | bool | |
+| include_items_at_minimum_threshold | bool | |
+| include_overdue_borrowers | bool | |
 | created_at | datetime | |
 | updated_at | datetime | |
 
-### logs_auditoria
-| Campo | Tipo | Observação |
+### audit_logs
+| Field | Type | Notes |
 | --- | --- | --- |
 | id | PK (bigserial) | |
-| usuario_id | FK → usuarios.id | indexado |
-| acao | string | |
-| entidade_afetada | string | |
-| endereco_ip | string | |
-| created_at | datetime | momento do evento (tabela append-only, sem updated_at) |
+| user_id | FK → users.id | indexed |
+| action | string | |
+| affected_entity | string | |
+| ip_address | string | |
+| created_at | datetime | moment of the event (append-only table, no updated_at) |

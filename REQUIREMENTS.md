@@ -218,17 +218,17 @@ Principais entidades identificadas e como se relacionam:
 
 ```mermaid
 erDiagram
-    usuarios ||--o{ movimentacoes : solicita
-    usuarios ||--o{ movimentacoes : aprova
-    itens ||--o{ movimentacoes : movimenta
-    usuarios ||--o{ pedidos_compra : solicita
-    itens ||--o{ pedidos_compra : referencia
-    usuarios ||--o{ logs_auditoria : gera
-    usuarios ||--o| configs_relatorio_semanal : configura
-    eixos ||--o{ itens : possui
-    eixos ||--o{ usuarios : atua_em
-    eixos ||--o{ cursos : oferece
-    cursos ||--o{ usuarios : matricula
+    users ||--o{ stock_movements : requests
+    users ||--o{ stock_movements : approves
+    items ||--o{ stock_movements : moves
+    users ||--o{ purchase_orders : requests
+    items ||--o{ purchase_orders : references
+    users ||--o{ audit_logs : generates
+    users ||--o| weekly_report_settings : configures
+    workshops ||--o{ items : holds
+    workshops ||--o{ users : hosts
+    workshops ||--o{ courses : offers
+    courses ||--o{ users : enrolls
 ```
 
 Esquema detalhado (colunas, tipos, chaves e índices): ver [docs/database-schema.md](./docs/database-schema.md).
