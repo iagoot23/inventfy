@@ -367,6 +367,18 @@ Primeira versão utilizável
 
 ---
 
-## 11. Referências e Anexos
+## 11. Cronograma
 
--
+**Metodologia:** desenvolvimento iterativo em sprints de 2 semanas (Scrum), com entregas incrementais. Testes unitários a cada sprint; teste de integração ao final de cada fase.
+
+| Fase | Sprint(s) | Duração estimada | Entregáveis principais |
+| --- | --- | --- | --- |
+| 0. Preparação | Sprint 0 | 1 semana | Setup do repositório e CI/CD; ambiente de desenvolvimento (Ubuntu 24.04 LTS local); schema inicial do banco (Seção 7); scaffolding do backend (Node.js) e frontend (React); autenticação com hash de senha e HTTPS. |
+| 1. MVP | Sprints 1–3 | 6 semanas | RF06 — cadastro de usuários; RF01 — cadastro de itens; RF04 — consulta de itens; RF02 simplificado — retirada e devolução sem validação das regras de negócio (apenas usuário atual e último a devolver), conforme Critérios de Aceite (Seção 10). Interface responsiva (mobile/tablet/desktop). |
+| **Marco: Teste do MVP** | Sprint 4 | 1 semana | Teste de aceitação com piloto reduzido (uma turma/oficina); validação de responsividade nos três dispositivos; coleta de feedback e correções antes de avançar para a Fase 2. |
+| 2. Regras de negócio | Sprints 5–7 | 6 semanas | RN1/RN2 — prazos de devolução por turno/perfil; RF02 completo — estados de movimentação, aprovação por docente/supervisor (RN6), fluxo de item danificado/reparo; RF03 — alertas de estoque mínimo; RN3 — notificações de atraso; RF07 — pedido de compra. |
+| 3. Relatórios e configuração | Sprint 8 | 2 semanas | RF05 — relatórios (histórico, itens mais/menos usados, inventário, movimentação por usuário, exportação PDF/Excel) e relatório semanal; RF06 — edição de perfil e configuração do relatório semanal pelo supervisor. |
+| 4. Não funcionais e hardening | Sprint 9 | 2 semanas | Log de auditoria; backup diário automatizado e teste de restauração; proteção contra SQL injection, XSS e CSRF; teste de carga (30–50 usuários simultâneos). |
+| 5. Homologação e lançamento piloto | Sprint 10 | 2 semanas | Deploy em ambiente de homologação; teste de aceite final (UAT) com docentes e supervisores; treinamento de usuários; deploy em produção (VPS, definido com o TI do SENAI); acompanhamento pós-lançamento (hipercare). |
+
+**Duração total estimada:** ~20 semanas (~5 meses), do Sprint 0 ao lançamento piloto.
