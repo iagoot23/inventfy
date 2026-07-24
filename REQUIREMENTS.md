@@ -214,52 +214,59 @@ Emprestada para supervisor: enviado notificação diferente lembrando de devolve
 
 ## 7. Modelo de Dados (rascunho)
 
+**Convenções de nomenclatura:** tabelas em snake_case, plural (ex.: `usuarios`, `itens`); colunas em snake_case, singular. Chave primária `id` (bigserial). Toda tabela possui `created_at`; tabelas com dados editáveis também possuem `updated_at`. `logs_auditoria` é somente-inserção (append-only), por isso não possui `updated_at`.
+
 ```mermaid
 erDiagram
-    EIXO ||--o{ ITEM : "possui estoque"
-    EIXO ||--o{ CURSO : "oferece"
-    EIXO ||--o{ USUARIO : "atua em / matriculado em"
-    CURSO ||--o{ USUARIO : "matricula (aluno)"
-    USUARIO ||--o{ MOVIMENTACAO : "solicita"
-    USUARIO ||--o{ MOVIMENTACAO : "aprova"
-    ITEM ||--o{ MOVIMENTACAO : "movimenta"
-    USUARIO ||--o{ PEDIDO_COMPRA : "solicita (instrutor)"
-    ITEM ||--o{ PEDIDO_COMPRA : "referencia"
-    USUARIO ||--o| CONFIG_RELATORIO_SEMANAL : "configura (supervisor)"
-    USUARIO ||--o{ LOG_AUDITORIA : "gera"
+    eixos ||--o{ itens : "possui estoque"
+    eixos ||--o{ cursos : "oferece"
+    eixos ||--o{ usuarios : "atua em / matriculado em"
+    cursos ||--o{ usuarios : "matricula (aluno)"
+    usuarios ||--o{ movimentacoes : "solicita"
+    usuarios ||--o{ movimentacoes : "aprova"
+    itens ||--o{ movimentacoes : "movimenta"
+    usuarios ||--o{ pedidos_compra : "solicita (instrutor)"
+    itens ||--o{ pedidos_compra : "referencia"
+    usuarios ||--o| configs_relatorio_semanal : "configura (supervisor)"
+    usuarios ||--o{ logs_auditoria : "gera"
 ```
 
-### EIXO
+### eixos
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
-| nome | string | Eletroeletrônica, Metalmecânica, Vestuário* e Tecnologia da Informação* (*futuro) |
+| id | PK (bigserial) | |
+| nome | string | único; Eletroeletrônica, Metalmecânica, Vestuário* e Tecnologia da Informação* (*futuro) |
+| created_at | datetime | |
+| updated_at | datetime | |
 
-### CURSO
+### cursos
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
+| id | PK (bigserial) | |
 | nome | string | |
-| eixo_id | FK → EIXO | |
+| eixo_id | FK → eixos.id | indexado |
+| created_at | datetime | |
+| updated_at | datetime | |
 
-### USUARIO
+### usuarios
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
+| id | PK (bigserial) | |
 | nome | string | |
-| matricula | string | |
-| email | string | domínio validado conforme RF06 |
+| matricula | string | único |
+| email | string | único; domínio validado conforme RF06 |
 | senha_hash | string | ver requisitos de senha (Seção 5) |
 | foto | string (opcional) | editável pelo próprio usuário (RF06) |
 | tipo | enum | aluno \| instrutor \| supervisor |
-| eixo_id | FK → EIXO | eixo de atuação/matrícula; para supervisor, define o eixo sob sua aprovação (RN6) |
-| curso_id | FK → CURSO (nullable) | exclusivo para aluno |
+| eixo_id | FK → eixos.id | indexado; eixo de atuação/matrícula; para supervisor, define o eixo sob sua aprovação (RN6) |
+| curso_id | FK → cursos.id (nullable) | indexado; exclusivo para aluno |
 | created_at | datetime | |
+| updated_at | datetime | |
 
-### ITEM
+### itens
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
+| id | PK (bigserial) | |
 | nome | string | |
 | codigo_proteus | string | |
 | numero_patrimonio | string (nullable) | se aplicável |
@@ -272,38 +279,42 @@ erDiagram
 | foto | string | |
 | tipo | enum | insumo \| componente_reutilizavel \| ferramenta_equipamento |
 | condicao | enum (nullable) | novo \| em_manutencao \| danificado — aplicável somente a ferramenta_equipamento e componente_reutilizavel (RF01) |
-| eixo_id | FK → EIXO | cada oficina tem estoque próprio (RN5) |
+| eixo_id | FK → eixos.id | indexado; cada oficina tem estoque próprio (RN5) |
+| created_at | datetime | |
+| updated_at | datetime | |
 
-### MOVIMENTACAO
+### movimentacoes
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
-| item_id | FK → ITEM | |
+| id | PK (bigserial) | |
+| item_id | FK → itens.id | indexado |
 | tipo | enum | entrada \| saida |
 | quantidade | int | |
-| usuario_solicitante_id | FK → USUARIO | |
-| usuario_aprovador_id | FK → USUARIO (nullable) | nulo quando não requer aprovação (RN6) |
+| usuario_solicitante_id | FK → usuarios.id | indexado |
+| usuario_aprovador_id | FK → usuarios.id (nullable) | indexado; nulo quando não requer aprovação (RN6) |
 | finalidade | string | |
 | estado | enum | pendente \| aprovada \| negada \| disponivel \| atrasada (RF02) |
-| data_solicitacao | datetime | |
 | prazo_devolucao | datetime (nullable) | calculado conforme turno/perfil (RN1, RN2) |
 | data_devolucao_efetiva | datetime (nullable) | |
+| created_at | datetime | momento da solicitação |
+| updated_at | datetime | última mudança de estado |
 
-### PEDIDO_COMPRA
+### pedidos_compra
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
-| item_id | FK → ITEM (nullable) | nulo se item ainda não cadastrado |
+| id | PK (bigserial) | |
+| item_id | FK → itens.id (nullable) | indexado; nulo se item ainda não cadastrado |
 | quantidade | int | |
 | justificativa | string | |
-| usuario_solicitante_id | FK → USUARIO | somente instrutor (RF07) |
-| data_solicitacao | datetime | |
+| usuario_solicitante_id | FK → usuarios.id | indexado; somente instrutor (RF07) |
+| created_at | datetime | momento da solicitação |
+| updated_at | datetime | |
 
-### CONFIG_RELATORIO_SEMANAL
+### configs_relatorio_semanal
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
-| usuario_id | FK → USUARIO (único, supervisor) | |
+| id | PK (bigserial) | |
+| usuario_id | FK → usuarios.id | único, indexado; somente supervisor |
 | dia_semana | enum | padrão: sexta-feira |
 | horario | time | padrão: 14h |
 | incluir_movimentacoes | bool | |
@@ -312,16 +323,18 @@ erDiagram
 | incluir_ferramentas_reparo | bool | |
 | incluir_itens_limiar_minimo | bool | |
 | incluir_inadimplentes | bool | |
+| created_at | datetime | |
+| updated_at | datetime | |
 
-### LOG_AUDITORIA
+### logs_auditoria
 | Campo | Tipo | Observação |
 | --- | --- | --- |
-| id | PK | |
-| usuario_id | FK → USUARIO | |
+| id | PK (bigserial) | |
+| usuario_id | FK → usuarios.id | indexado |
 | acao | string | |
 | entidade_afetada | string | |
-| data_hora | datetime | |
 | endereco_ip | string | |
+| created_at | datetime | momento do evento (tabela append-only, sem updated_at) |
 
 ---
 
