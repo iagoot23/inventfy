@@ -19,7 +19,7 @@ This repository currently contains **planning/requirements documentation only** 
 - `docs/database-schema.md` — the technical, column-level database schema (types, keys, indexes). Keep this file, not `REQUIREMENTS.md`, in sync with any real migrations/ORM schema once code exists; `REQUIREMENTS.md` §7 only holds a conceptual ER diagram and links here.
 - `README.md` — short project overview, links to `REQUIREMENTS.md`.
 
-Project documentation is written in Portuguese (the audience is SENAI staff/students). Keep documentation edits in Portuguese for consistency.
+**Language policy:** all documentation and naming in this project (files, code, identifiers, commit messages, `docs/`) must be in English, unless explicitly stated otherwise. The application itself (user-facing UI/content) will be in Portuguese, since its audience is SENAI staff/students — that is the one explicit exception. `REQUIREMENTS.md`, `README.md`, and `docs/database-schema.md` currently predate this policy and are still in Portuguese; see `TODO.md` §0 for the pending decision on whether to translate them.
 
 ## Domain model (from REQUIREMENTS.md)
 

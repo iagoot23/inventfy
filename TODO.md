@@ -1,84 +1,86 @@
-# TODO (uso interno — Claude Code)
+# TODO (internal use — Claude Code)
 
-Este arquivo é mantido pelo Claude Code entre sessões, não é um artefato voltado ao usuário. Regras de manutenção:
-- Sempre que uma tarefa for concluída nesta conversa/sessão, marque-a aqui (`- [x]`) antes de encerrar.
-- Sempre que uma tarefa nova surgir (pedida pelo usuário ou identificada durante o trabalho), adicione-a na seção correspondente.
-- Cobre o ciclo de vida completo do projeto, do levantamento de requisitos ao deploy — não apenas a implementação.
-- Referências RF/RN apontam para `REQUIREMENTS.md`; convenções de banco estão em `docs/database-schema.md`.
+This file is maintained by Claude Code across sessions; it is not a user-facing artifact. Maintenance rules:
+- Whenever a task is completed in this conversation/session, check it off here (`- [x]`) before finishing.
+- Whenever a new task comes up (requested by the user or discovered during work), add it to the matching section.
+- Covers the project's full lifecycle, from requirements gathering to deployment — not just implementation.
+- RF/RN references point to `REQUIREMENTS.md`; database conventions are in `docs/database-schema.md`.
 
-## 0. Requisitos e documentação
-- [x] Criar repositório GitHub (privado) e configurar remoto
-- [x] Adicionar `.gitignore` (Node/JavaScript)
-- [x] Adicionar `README.md`
-- [x] Adicionar `LICENSE` (MIT)
-- [x] Renomear `requisitos.md` para `REQUIREMENTS.md`
-- [x] Remover trailer de co-autoria do histórico de commits
-- [x] Adicionar expansão futura (Vestuário, TI) ao contexto
-- [x] Adicionar condição de item (novo/em_manutencao/danificado) e fluxo de reparo
-- [x] Corrigir notificações de atraso/estoque mínimo para supervisão (relatório semanal em vez de notificação imediata)
-- [x] Adicionar edição de perfil e configuração do relatório semanal (RF06)
-- [x] Preencher Modelo de Dados (rascunho) com diagrama ER conceitual (Seção 7)
-- [x] Criar `docs/database-schema.md` (schema técnico detalhado, convenções snake_case)
-- [x] Substituir "Referências e Anexos" por Cronograma (Seção 11)
-- [x] Remover estimativas de tempo do cronograma, manter apenas ordem
-- [x] Adicionar etapa de Design de UI/UX ao cronograma
-- [x] Mesclar colunas Ordem/Fase na linha do Marco de Teste do MVP
-- [x] Criar `CLAUDE.md`
-- [x] Criar `TODO.md` e apontar `CLAUDE.md` para ele
-- [ ] Definir e preencher uma nova seção "Referências e Anexos" (se necessário)
+## 0. Requirements and documentation
+- [x] Create GitHub repository (private) and configure remote
+- [x] Add `.gitignore` (Node/JavaScript)
+- [x] Add `README.md`
+- [x] Add `LICENSE` (MIT)
+- [x] Rename `requisitos.md` to `REQUIREMENTS.md`
+- [x] Remove co-author trailer from commit history
+- [x] Add future expansion (Vestuário, TI) to context
+- [x] Add item condition (new/under_maintenance/damaged) and repair flow
+- [x] Fix late-return/low-stock notifications for supervision (weekly report instead of instant notification)
+- [x] Add profile editing and weekly report configuration (RF06)
+- [x] Fill in Data Model (draft) with conceptual ER diagram (Section 7)
+- [x] Create `docs/database-schema.md` (detailed technical schema, snake_case conventions)
+- [x] Replace "References and Attachments" with Cronograma (Section 11)
+- [x] Remove time estimates from the cronograma, keep only ordering
+- [x] Add UI/UX Design step to the cronograma
+- [x] Merge Order/Phase columns in the MVP Test Milestone row
+- [x] Create `CLAUDE.md`
+- [x] Create `TODO.md` and point `CLAUDE.md` to it
+- [x] Translate `TODO.md` to English; establish English-only documentation/naming policy (app UI stays in Portuguese)
+- [ ] Decide whether to translate `REQUIREMENTS.md`, `README.md`, and `docs/database-schema.md` to English (pending user decision)
+- [ ] Define and fill in a new "References and Attachments" section (if needed)
 
-## 1. Preparação
-- [ ] Configurar CI/CD
-- [ ] Configurar ambiente de desenvolvimento (Ubuntu 24.04 LTS local)
-- [ ] Criar schema inicial do banco de dados (ver `docs/database-schema.md`)
-- [ ] Scaffolding do backend (Node.js)
-- [ ] Scaffolding do frontend (React)
-- [ ] Implementar autenticação com hash de senha
-- [ ] Configurar HTTPS
+## 1. Setup
+- [ ] Configure CI/CD
+- [ ] Configure development environment (Ubuntu 24.04 LTS local)
+- [ ] Create initial database schema (see `docs/database-schema.md`)
+- [ ] Scaffold backend (Node.js)
+- [ ] Scaffold frontend (React)
+- [ ] Implement authentication with password hashing
+- [ ] Configure HTTPS
 
-## 2. Design de UI/UX
-- [ ] Wireframes das telas principais: login, cadastro de itens, consulta, retirada/devolução
-- [ ] Protótipo navegável
-- [ ] Apresentar e validar protótipo com stakeholders (coordenação/supervisores do SENAI)
+## 2. UI/UX Design
+- [ ] Wireframes for the main screens: login, item registration, search, checkout/return
+- [ ] Clickable prototype
+- [ ] Present and validate the prototype with stakeholders (SENAI coordination/supervisors)
 
 ## 3. MVP
-- [ ] RF06 — cadastro de usuários
-- [ ] RF01 — cadastro de itens
-- [ ] RF04 — consulta de itens
-- [ ] RF02 simplificado — retirada e devolução sem validação das regras de negócio (apenas usuário atual e último a devolver)
-- [ ] Interface responsiva (mobile/tablet/desktop)
+- [ ] RF06 — user registration
+- [ ] RF01 — item registration
+- [ ] RF04 — item search
+- [ ] RF02 simplified — checkout/return without business-rule validation (only current user + last returner tracked)
+- [ ] Responsive interface (mobile/tablet/desktop)
 
-## Marco: Teste do MVP
-- [ ] Teste de aceitação com piloto reduzido (uma turma/oficina)
-- [ ] Validar responsividade nos três dispositivos
-- [ ] Coletar feedback e aplicar correções antes de avançar
+## Milestone: MVP Test
+- [ ] Acceptance test with a reduced pilot (one class/workshop)
+- [ ] Validate responsiveness on all three device types
+- [ ] Collect feedback and apply fixes before moving on
 
-## 4. Regras de negócio
-- [ ] RN1/RN2 — prazos de devolução por turno/perfil
-- [ ] RF02 completo — estados de movimentação (pendente/aprovada/negada/disponível/atrasada)
-- [ ] RN6 — aprovação por docente/supervisor conforme eixo
-- [ ] Fluxo de item danificado/reparo (RF02)
-- [ ] RF03 — alertas de estoque mínimo
-- [ ] RN3 — notificações de atraso
-- [ ] RF07 — pedido de compra
+## 4. Business rules
+- [ ] RN1/RN2 — return deadlines by shift/profile
+- [ ] RF02 complete — movement states (pending/approved/denied/available/overdue)
+- [ ] RN6 — approval by teacher/supervisor depending on workshop/axis
+- [ ] Damaged item/repair flow (RF02)
+- [ ] RF03 — low-stock alerts
+- [ ] RN3 — late-return notifications
+- [ ] RF07 — purchase request
 
-## 5. Relatórios e configuração
-- [ ] RF05 — relatórios (histórico, itens mais/menos usados, inventário, movimentação por usuário)
-- [ ] RF05 — exportação para PDF/Excel
-- [ ] RF05 — relatório semanal
-- [ ] RF06 — edição de perfil (todo usuário)
-- [ ] RF06 — configuração do relatório semanal pelo supervisor (dia/horário, toggles)
+## 5. Reports and configuration
+- [ ] RF05 — reports (history, most/least used items, inventory, movement by user)
+- [ ] RF05 — export to PDF/Excel
+- [ ] RF05 — weekly report
+- [ ] RF06 — profile editing (all users)
+- [ ] RF06 — weekly report configuration by supervisor (day/time, toggles)
 
-## 6. Não funcionais e hardening
-- [ ] Log de auditoria
-- [ ] Backup diário automatizado
-- [ ] Teste de restauração de backup
-- [ ] Proteção contra SQL injection, XSS e CSRF
-- [ ] Teste de carga (30–50 usuários simultâneos)
+## 6. Non-functional and hardening
+- [ ] Audit log
+- [ ] Automated daily backup
+- [ ] Backup restoration test
+- [ ] Protection against SQL injection, XSS, and CSRF
+- [ ] Load test (30–50 concurrent users)
 
-## 7. Homologação e lançamento piloto
-- [ ] Deploy em ambiente de homologação
-- [ ] Teste de aceite final (UAT) com docentes e supervisores
-- [ ] Treinamento de usuários
-- [ ] Deploy em produção (VPS)
-- [ ] Acompanhamento pós-lançamento (hipercare)
+## 7. Staging and pilot launch
+- [ ] Deploy to staging environment
+- [ ] Final acceptance test (UAT) with teachers and supervisors
+- [ ] User training
+- [ ] Deploy to production (VPS)
+- [ ] Post-launch monitoring (hypercare)
