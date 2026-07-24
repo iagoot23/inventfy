@@ -268,13 +268,18 @@ Primeira versão utilizável
 
 **Metodologia:** desenvolvimento iterativo (Scrum), com entregas incrementais. Testes unitários a cada iteração; teste de integração ao final de cada fase.
 
-| Ordem | Fase | Entregáveis principais |
-| --- | --- | --- |
-| 1 | Preparação | Setup do repositório e CI/CD; ambiente de desenvolvimento (Ubuntu 24.04 LTS local); schema inicial do banco (Seção 7); scaffolding do backend (Node.js) e frontend (React); autenticação com hash de senha e HTTPS. |
-| 2 | Design de UI/UX | Wireframes e protótipo navegável das telas principais (login, cadastro de itens, consulta, retirada/devolução); apresentação e validação com stakeholders (coordenação/supervisores do SENAI) antes do início do desenvolvimento do MVP. |
-| 3 | MVP | RF06 — cadastro de usuários; RF01 — cadastro de itens; RF04 — consulta de itens; RF02 simplificado — retirada e devolução sem validação das regras de negócio (apenas usuário atual e último a devolver), conforme Critérios de Aceite (Seção 10). Interface responsiva (mobile/tablet/desktop), construída a partir do protótipo validado. |
-| **Marco: Teste do MVP** | | Teste de aceitação com piloto reduzido (uma turma/oficina); validação de responsividade nos três dispositivos; coleta de feedback e correções antes de avançar para a próxima fase. |
-| 4 | Regras de negócio | RN1/RN2 — prazos de devolução por turno/perfil; RF02 completo — estados de movimentação, aprovação por docente/supervisor (RN6), fluxo de item danificado/reparo; RF03 — alertas de estoque mínimo; RN3 — notificações de atraso; RF07 — pedido de compra. |
-| 5 | Relatórios e configuração | RF05 — relatórios (histórico, itens mais/menos usados, inventário, movimentação por usuário, exportação PDF/Excel) e relatório semanal; RF06 — edição de perfil e configuração do relatório semanal pelo supervisor. |
-| 6 | Não funcionais e hardening | Log de auditoria; backup diário automatizado e teste de restauração; proteção contra SQL injection, XSS e CSRF; teste de carga (30–50 usuários simultâneos). |
-| 7 | Homologação e lançamento piloto | Deploy em ambiente de homologação; teste de aceite final (UAT) com docentes e supervisores; treinamento de usuários; deploy em produção (VPS, definido com o TI do SENAI); acompanhamento pós-lançamento (hipercare). |
+<table>
+<thead>
+<tr><th>Ordem</th><th>Fase</th><th>Entregáveis principais</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Preparação</td><td>Setup do repositório e CI/CD; ambiente de desenvolvimento (Ubuntu 24.04 LTS local); schema inicial do banco (Seção 7); scaffolding do backend (Node.js) e frontend (React); autenticação com hash de senha e HTTPS.</td></tr>
+<tr><td>2</td><td>Design de UI/UX</td><td>Wireframes e protótipo navegável das telas principais (login, cadastro de itens, consulta, retirada/devolução); apresentação e validação com stakeholders (coordenação/supervisores do SENAI) antes do início do desenvolvimento do MVP.</td></tr>
+<tr><td>3</td><td>MVP</td><td>RF06 — cadastro de usuários; RF01 — cadastro de itens; RF04 — consulta de itens; RF02 simplificado — retirada e devolução sem validação das regras de negócio (apenas usuário atual e último a devolver), conforme Critérios de Aceite (Seção 10). Interface responsiva (mobile/tablet/desktop), construída a partir do protótipo validado.</td></tr>
+<tr><td colspan="2"><strong>Marco: Teste do MVP</strong></td><td>Teste de aceitação com piloto reduzido (uma turma/oficina); validação de responsividade nos três dispositivos; coleta de feedback e correções antes de avançar para a próxima fase.</td></tr>
+<tr><td>4</td><td>Regras de negócio</td><td>RN1/RN2 — prazos de devolução por turno/perfil; RF02 completo — estados de movimentação, aprovação por docente/supervisor (RN6), fluxo de item danificado/reparo; RF03 — alertas de estoque mínimo; RN3 — notificações de atraso; RF07 — pedido de compra.</td></tr>
+<tr><td>5</td><td>Relatórios e configuração</td><td>RF05 — relatórios (histórico, itens mais/menos usados, inventário, movimentação por usuário, exportação PDF/Excel) e relatório semanal; RF06 — edição de perfil e configuração do relatório semanal pelo supervisor.</td></tr>
+<tr><td>6</td><td>Não funcionais e hardening</td><td>Log de auditoria; backup diário automatizado e teste de restauração; proteção contra SQL injection, XSS e CSRF; teste de carga (30–50 usuários simultâneos).</td></tr>
+<tr><td>7</td><td>Homologação e lançamento piloto</td><td>Deploy em ambiente de homologação; teste de aceite final (UAT) com docentes e supervisores; treinamento de usuários; deploy em produção (VPS, definido com o TI do SENAI); acompanhamento pós-lançamento (hipercare).</td></tr>
+</tbody>
+</table>
