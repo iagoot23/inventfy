@@ -1,6 +1,6 @@
 # Inventfy
 
-Sistema de gerenciamento de almoxarifado para o SENAI, voltado às oficinas dos eixos de metalmecânica e eletroeletrônica.
+Sistema de gerenciamento de almoxarifado para o SENAI, voltado às oficinas dos eixos de metalmecânica e eletroeletrônica, com expansão futura prevista para os eixos de vestuário e tecnologia da informação.
 
 ## Sobre o projeto
 

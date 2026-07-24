@@ -53,6 +53,8 @@ Projeto será expandido futuramente para os eixos de Vestuário e Tecnologia da 
 | Instrutor | Usuário docente | Retira itens, adiciona itens, verifica somente usuário atual, aprova retirada de itens, faz pedido de compra |
 | Supervisor | Coordenação | Acesso total, gerencia usuários, retira itens, adiciona itens, verifica histórico de uso, aprova retirada de itens, faz pedido de compra e gera relatórios |
 
+Os termos "instrutor" e "docente" são usados de forma intercambiável neste documento.
+
 **Quantidade estimada de usuários simultâneos:**
 Para projeto piloto:
 - Alunos: 600
@@ -69,30 +71,34 @@ Para projeto piloto:
 ## 4. Requisitos Funcionais
 
 ### 4.1 Cadastro de itens/materiais (RF01)
-- Campos que cada item precisa ter: nome, código (Proteus), número de patrimônio (se aplicável), categoria, medida ou modelo, descrição, quantidade atual, quantidade mínima, localização física, condição atual e foto.
-- Condição atual do item: novo, em manutenção, danificado, etc.
+- Campos que cada item precisa ter: nome, código (Proteus), número de patrimônio (se aplicável), categoria, medida ou modelo, descrição, quantidade atual, quantidade mínima, localização física e foto.
+- Campo condição atual (novo, em manutenção, danificado, etc.) aplicável somente a ferramentas/equipamentos e componentes reutilizáveis. Insumos, por serem consumíveis, não possuem condição.
 - Diferenciação entre insumo, componente reutilizável e ferramenta/equipamento.
 
 ### 4.2 Movimentação de estoque (RF02)
 - Material entra após devolução ou chegada de compra realizada pelo Setor de Compra (sistema independente).
 - Saída realizada após empréstimo para outro ambiente ou discente (prática diária) ou consumo.
 - Aprovação da retirada é feita pelo docente ou supervisor.
-- Docente pode fazer retirada sem permissão.
+- Docente pode fazer retirada sem permissão, restrito a itens do próprio eixo (ver Regra de Negócio 6).
 - Toda movimentação deve conter registro, seja ela entrada ou saída. Quem solicitou, quem aprovou (se necessário), horário, quantidade e finalidade.
 - Possíveis estados de um item:
     Exibição para discente: pendente, aprovada, negada e disponível.
     Exibição para docente e supervisor: pendente, aprovada, negada, disponível e atrasada.
 - Ao retirar um item marcado com condição "danificado", o sistema exibe aviso de que o item está com defeito e pergunta se ele será reparado. Se sim, a condição do item é alterada para "em manutenção".
+- Sempre que um item é marcado como "danificado", o docente responsável pelo eixo recebe alerta instantâneo (aplicativo e e-mail). Supervisor não recebe alerta imediato; o item aparece no relatório semanal (ver RF05 e RF06).
+- Qualquer usuário pode marcar um item "em manutenção" ou "danificado" como reparado, retornando sua condição para "novo".
 
 ### 4.3 Controle de estoque mínimo / alertas (RF03)
 - Todas as notificações são feitas por PWA e e-mail.
 - O sistema deve avisar quando um item está acabando. O limiar é definido no momento do cadastro e pode ser alterado somente pelo supervisor.
-- Docentes e supervisor recebem alerta pelo aplicativo e e-mail.
+- Docentes recebem alerta instantâneo pelo aplicativo e e-mail. Supervisor não recebe alerta imediato; itens que atingiram o limiar mínimo aparecem no relatório semanal (ver RF05 e RF06).
 
 ### 4.4 Busca e consulta (RF04)
-- Filtros de quantidade, turma, eixo, categoria, localização, descrição e disponibilidade.
+- Filtros de quantidade, turma, eixo, categoria, localização, descrição, disponibilidade e condição (para ferramentas/equipamentos e componentes reutilizáveis).
 
 ### 4.5 Relatórios (RF05)
+Acesso: relatórios são exclusivos do supervisor. Instrutor não possui acesso a relatórios.
+
 - Histórico de movimentação
 - Itens mais usados
 - Itens menos usados
@@ -189,12 +195,13 @@ Teste de restauração: pelo menos 1x por semestre, testar se o backup realmente
 
 ## 6. Regras de Negócio
 
-1. Ferramenta emprestada para discente tem prazo de devolução definido de acordo com turno:
+1. Ferramenta ou componente reutilizável emprestado para discente tem prazo de devolução definido de acordo com turno:
 - Manhã: 11h30
 - Tarde: 17h30
 - Noite: 22h30
 Validação do turno feita de acordo com momento da retirada.
-2. Ferramenta emprestada para docente tem prazo de devolução definido de um dia.
+2. Ferramenta ou componente reutilizável emprestado para docente tem prazo de devolução definido de um dia.
+Insumos são consumíveis e não retornam ao estoque, portanto não possuem prazo de devolução.
 3. Caso o prazo de devolução seja excedido e não houve registro de entrada é enviado notificação e e-mail:
 Emprestada para discente: enviado para instrutor. Supervisor não recebe notificação imediata, o atraso é incluído no relatório semanal (ver RF05 e RF06).
 Emprestada para docente: enviado para o próprio docente (notificação diferente lembrando de devolver). Supervisor não recebe notificação imediata, o atraso é incluído no relatório semanal (ver RF05 e RF06).
