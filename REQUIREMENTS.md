@@ -214,7 +214,114 @@ Emprestada para supervisor: enviado notificação diferente lembrando de devolve
 
 ## 7. Modelo de Dados (rascunho)
 
-*preencher*
+```mermaid
+erDiagram
+    EIXO ||--o{ ITEM : "possui estoque"
+    EIXO ||--o{ CURSO : "oferece"
+    EIXO ||--o{ USUARIO : "atua em / matriculado em"
+    CURSO ||--o{ USUARIO : "matricula (aluno)"
+    USUARIO ||--o{ MOVIMENTACAO : "solicita"
+    USUARIO ||--o{ MOVIMENTACAO : "aprova"
+    ITEM ||--o{ MOVIMENTACAO : "movimenta"
+    USUARIO ||--o{ PEDIDO_COMPRA : "solicita (instrutor)"
+    ITEM ||--o{ PEDIDO_COMPRA : "referencia"
+    USUARIO ||--o| CONFIG_RELATORIO_SEMANAL : "configura (supervisor)"
+    USUARIO ||--o{ LOG_AUDITORIA : "gera"
+```
+
+### EIXO
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| nome | string | Eletroeletrônica, Metalmecânica, Vestuário* e Tecnologia da Informação* (*futuro) |
+
+### CURSO
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| nome | string | |
+| eixo_id | FK → EIXO | |
+
+### USUARIO
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| nome | string | |
+| matricula | string | |
+| email | string | domínio validado conforme RF06 |
+| senha_hash | string | ver requisitos de senha (Seção 5) |
+| foto | string (opcional) | editável pelo próprio usuário (RF06) |
+| tipo | enum | aluno \| instrutor \| supervisor |
+| eixo_id | FK → EIXO | eixo de atuação/matrícula; para supervisor, define o eixo sob sua aprovação (RN6) |
+| curso_id | FK → CURSO (nullable) | exclusivo para aluno |
+| created_at | datetime | |
+
+### ITEM
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| nome | string | |
+| codigo_proteus | string | |
+| numero_patrimonio | string (nullable) | se aplicável |
+| categoria | string | |
+| medida_modelo | string | |
+| descricao | string | |
+| quantidade_atual | int | |
+| quantidade_minima | int | limiar, editável somente por supervisor |
+| localizacao_fisica | string | |
+| foto | string | |
+| tipo | enum | insumo \| componente_reutilizavel \| ferramenta_equipamento |
+| condicao | enum (nullable) | novo \| em_manutencao \| danificado — aplicável somente a ferramenta_equipamento e componente_reutilizavel (RF01) |
+| eixo_id | FK → EIXO | cada oficina tem estoque próprio (RN5) |
+
+### MOVIMENTACAO
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| item_id | FK → ITEM | |
+| tipo | enum | entrada \| saida |
+| quantidade | int | |
+| usuario_solicitante_id | FK → USUARIO | |
+| usuario_aprovador_id | FK → USUARIO (nullable) | nulo quando não requer aprovação (RN6) |
+| finalidade | string | |
+| estado | enum | pendente \| aprovada \| negada \| disponivel \| atrasada (RF02) |
+| data_solicitacao | datetime | |
+| prazo_devolucao | datetime (nullable) | calculado conforme turno/perfil (RN1, RN2) |
+| data_devolucao_efetiva | datetime (nullable) | |
+
+### PEDIDO_COMPRA
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| item_id | FK → ITEM (nullable) | nulo se item ainda não cadastrado |
+| quantidade | int | |
+| justificativa | string | |
+| usuario_solicitante_id | FK → USUARIO | somente instrutor (RF07) |
+| data_solicitacao | datetime | |
+
+### CONFIG_RELATORIO_SEMANAL
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| usuario_id | FK → USUARIO (único, supervisor) | |
+| dia_semana | enum | padrão: sexta-feira |
+| horario | time | padrão: 14h |
+| incluir_movimentacoes | bool | |
+| incluir_cursos_oficina | bool | |
+| incluir_instrutores_oficina | bool | |
+| incluir_ferramentas_reparo | bool | |
+| incluir_itens_limiar_minimo | bool | |
+| incluir_inadimplentes | bool | |
+
+### LOG_AUDITORIA
+| Campo | Tipo | Observação |
+| --- | --- | --- |
+| id | PK | |
+| usuario_id | FK → USUARIO | |
+| acao | string | |
+| entidade_afetada | string | |
+| data_hora | datetime | |
+| endereco_ip | string | |
 
 ---
 
