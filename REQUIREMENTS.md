@@ -42,6 +42,9 @@ Atualmente é gerenciado na metalmecânica através de planilha de papel registr
 - Eletroeletrônica
 - Metalmecânica
 
+**Expansão futura:**
+Projeto será expandido futuramente para os eixos de Vestuário e Tecnologia da Informação.
+
 **Perfis de usuário (papéis no sistema):**
 
 | Perfil | Quem é | O que pode fazer |
@@ -66,7 +69,8 @@ Para projeto piloto:
 ## 4. Requisitos Funcionais
 
 ### 4.1 Cadastro de itens/materiais (RF01)
-- Campos que cada item precisa ter: nome, código (Proteus), número de patrimônio (se aplicável), categoria, medida ou modelo, descrição, quantidade atual, quantidade mínima, localização física e foto.
+- Campos que cada item precisa ter: nome, código (Proteus), número de patrimônio (se aplicável), categoria, medida ou modelo, descrição, quantidade atual, quantidade mínima, localização física, condição atual e foto.
+- Condição atual do item: novo, em manutenção, danificado, etc.
 - Diferenciação entre insumo, componente reutilizável e ferramenta/equipamento.
 
 ### 4.2 Movimentação de estoque (RF02)
@@ -78,6 +82,7 @@ Para projeto piloto:
 - Possíveis estados de um item:
     Exibição para discente: pendente, aprovada, negada e disponível.
     Exibição para docente e supervisor: pendente, aprovada, negada, disponível e atrasada.
+- Ao retirar um item marcado com condição "danificado", o sistema exibe aviso de que o item está com defeito e pergunta se ele será reparado. Se sim, a condição do item é alterada para "em manutenção".
 
 ### 4.3 Controle de estoque mínimo / alertas (RF03)
 - Todas as notificações são feitas por PWA e e-mail.
@@ -95,6 +100,16 @@ Para projeto piloto:
 - Movimentação por usuário
 - Opção de exportar para PDF ou Excel
 
+**Relatório semanal (supervisão):**
+Substitui notificações imediatas de atraso de devolução para discente e docente (ver Regra de Negócio 3). Enviado automaticamente por e-mail no dia e horário configurados pelo supervisor (ver RF06). Conteúdo configurável por interruptores on/off:
+- Movimentações
+- Cursos que usaram a oficina
+- Instrutores que usaram a oficina
+- Ferramentas que necessitam reparo
+- Itens que atingiram o limiar mínimo
+- Alunos e docentes inadimplentes (com devolução em atraso)
+- etc.
+
 ### 4.6 Gestão de usuários e permissões (RF06)
 Cadastro efetuado pelo supervisor:
 - Nome
@@ -111,6 +126,12 @@ Aplicativo valida o e-mail:
 - Para aluno deve fazer parte do domínio @senaimgaluno.com.br (Google)
 
 O usuário recém-criado recebe por e-mail senha inicial gerada aleatoriamente e sugere alteração (feita no aplicativo).
+
+**Edição de perfil:**
+Todo usuário tem acesso a uma tela para alterar dados que não sejam pertinentes ao funcionamento da aplicação (ex.: foto).
+Supervisor possui uma alteração adicional nessa tela, referente à configuração do relatório semanal (ver RF05):
+- Dia da semana e horário de geração/envio (padrão: sexta-feira, 14h).
+- Interruptores (on/off) para cada item incluído no relatório: movimentações, cursos que usaram a oficina, instrutores que usaram a oficina, ferramentas que necessitam reparo, itens que atingiram o limiar mínimo, alunos e docentes inadimplentes, etc.
 
 ### 4.7 Pedido de compra (RF07)
 Opção disponível para instrutor.
@@ -175,8 +196,8 @@ Teste de restauração: pelo menos 1x por semestre, testar se o backup realmente
 Validação do turno feita de acordo com momento da retirada.
 2. Ferramenta emprestada para docente tem prazo de devolução definido de um dia.
 3. Caso o prazo de devolução seja excedido e não houve registro de entrada é enviado notificação e e-mail:
-Emprestada para discente: enviado para instrutor e supervisor.
-Emprestada para docente: enviado para supervisor e docente (enviado notificação diferente lembrando de devolver).
+Emprestada para discente: enviado para instrutor. Supervisor não recebe notificação imediata, o atraso é incluído no relatório semanal (ver RF05 e RF06).
+Emprestada para docente: enviado para o próprio docente (notificação diferente lembrando de devolver). Supervisor não recebe notificação imediata, o atraso é incluído no relatório semanal (ver RF05 e RF06).
 Emprestada para supervisor: enviado notificação diferente lembrando de devolver.
 4. Pedido de compra não é gerado automaticamente caso item atinja limiar mínimo.
 5. Cada oficina tem estoque próprio. Alunos só podem ver estoque do eixo em que estão inseridos. Docentes e supervisores podem acessar qualquer estoque.
